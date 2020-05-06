@@ -1,5 +1,5 @@
 ---
-title:  "あつまれ YouTuberのデータ その3"
+#title:  "あつまれ YouTuberのデータ その3"
 date: 2020-05-02 22:00:00 +0900
 output:
   github_document:
