@@ -4,6 +4,8 @@ title:  "ChimeraNet+x-vectorでデータを集めたい その1"
 date:   2020-04-12 23:00:00 +0900
 ---
 
+[次回]({% post_url 2020-04-13-chimeranet-xvector-day-2 %})
+
 本シリーズはいずれ投稿する`XXX`の続きです。
 今日は評価用データセットの説明を行います。
 

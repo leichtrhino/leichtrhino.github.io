@@ -4,6 +4,8 @@ title:  "ChimeraNet+x-vectorでデータを集めたい その3"
 date:   2020-04-17 06:00:00 +0900
 ---
 
+[前回]({% post_url 2020-04-13-chimeranet-xvector-day-2 %})
+
 続きです。
 
 日曜夕方から計算を開始し、木曜朝に一通り終わりました。

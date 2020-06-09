@@ -4,6 +4,9 @@ title:  "ChimeraNet+x-vectorでデータを集めたい その2"
 date:   2020-04-13 06:00:00 +0900
 ---
 
+[前回]({% post_url 2020-04-12-chimeranet-xvector-day-1 %})
+[次回]({% post_url 2020-04-17-chimeranet-xvector-day-3 %})
+
 今日は実験の内容について説明します。
 
 ### 実験の概要
