@@ -5,6 +5,7 @@ date:   2020-06-03 20:00:00 +0900
 ---
 
 [前回]({% post_url 2020-05-05-youtuberer-day-4 %})
+[次回]({% post_url 2021-03-28-youtuberer-day-6 %})
 
 前回までの手順で収集した動画リストと[`pafy`](https://pypi.org/project/pafy/)と[`syncnet_python`](https://github.com/joonson/syncnet_python)を使って音声データを収集します。
 
