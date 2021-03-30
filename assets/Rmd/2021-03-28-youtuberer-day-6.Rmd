@@ -1,10 +1,5 @@
----
-layout: post
-title:  "あつまれ YouTuberのデータ その6"
-date:   2021-03-28 20:00:00 +0900
----
 
-[前回]({% post_url 2020-06-03-youtuberer-day-5 %})
+`[前回]({% post_url 2020-06-03-youtuberer-day-5 %})`
 
 前回は`syncnet-python`を使って、YouTube動画内で人が喋っている区間を切り出しました。
 しかし、SyncNetのConfidence単体では効果音やBGMが入っているかどうかを判別することはできませんでした（結果を聴いて確認しました）。
@@ -13,40 +8,39 @@ date:   2021-03-28 20:00:00 +0900
 
 ### 目次
 
-1.  `snreval`の使用法
-2.  各スコアを一括で推定する
-3.  一般線形モデルでBGMがないか推定する
-4.  次回予告
+1. `snreval`の使用法
+2. 各スコアを一括で推定する
+3. 一般線形モデルでBGMがないか推定する
+4. 次回予告
 
 ### 1 `snreval`の使用法
 
 `snreval`は、音声の品質を推定するためのアルゴリズムを実装したMATLABの関数群です。
-リンク先にあるように、`NIST STNR`,
-`WADA SNR`などの評価方法を実装しています。
+リンク先にあるように、`NIST STNR`, `WADA SNR`などの評価方法を実装しています。
 
 ダウンロードするには、リンク先のInstallationセクションに記載されたリンクから、環境に合わせてダウンロードします
 （MATLAB向けにコンパイルされたパッケージか、ソースコードから選択できます）。
 
-ここでは、GNU Octave
-6.1.0を対象とします。ソースコードをダウンロード・展開した後、
-`audioread.m`を削除します（Octave
-6.1.0で`audioread`は標準で使用できるため）。
+ここでは、GNU Octave 6.1.0を対象とします。ソースコードをダウンロード・展開した後、
+`audioread.m`を削除します（Octave 6.1.0で`audioread`は標準で使用できるため）。
 Octaveを起動し、`pkg load signal`で必要なパッケージを読み込みます。
 カレントディレクトリを展開先に合わせたら、次のコマンドを実行し、`snreval`を呼び出します。
 
-    [SNRstnr,SNRwada,SNRvad,SAR,pesqmos,targdelay] = ...
-    snreval('waveform.wav', '-samplerate', 16000, '-guessvad', 1, '-disp', 0);
+```
+[SNRstnr,SNRwada,SNRvad,SAR,pesqmos,targdelay] = ...
+snreval('waveform.wav', '-samplerate', 16000, '-guessvad', 1, '-disp', 0);
+```
 
 `waveform.wav`は分析対象のファイル名を表します。
 `-samplerate`直後の数値を指定すると、ファイルを指定したサンプリング周波数にしてから分析します。
-NIST STNR, WADA SNR, SNR-VADそれぞれの結果が`SNRstnr`, `SNRwada`,
-`SNRvad`に格納されます。 それぞれ値が大きいほど、品質が高いと言えます。
+NIST STNR, WADA SNR, SNR-VADそれぞれの結果が`SNRstnr`, `SNRwada`, `SNRvad`に格納されます。
+それぞれ値が大きいほど、品質が高いと言えます。
 
 ### 2 各スコアを一括で推定する
 
 前回抽出した動画ファイルに対して一括で評価する関数を`batch_process.m`に作成しました。
 
-``` octave
+```{octave eval=FALSE}
 function batch_process (root_directory, output_file)
   video_group_list = glob(cstrcat(root_directory, '/*'));
   proc_video_group_num = rows(video_group_list);
@@ -89,21 +83,23 @@ endfunction
 
 `/path-to-syncnet-out/pycrop`の構造は以下の通りです。
 
-    --path-to-syncnet-out
-    └── pycrop
-        └── 動画ID
-            ├── 00000.avi
-            ├── 00001.avi
-            ├── 00002.avi
-            ├── ...
-            └── xxxxx.avi
+```
+--path-to-syncnet-out
+└── pycrop
+    └── 動画ID
+        ├── 00000.avi
+        ├── 00001.avi
+        ├── 00002.avi
+        ├── ...
+        └── xxxxx.avi
+```
 
 `score-snr.csv`は、次の列をもったcsvファイルです。
 
--   `scene`: 動画ID/xxxxx.avi
--   `nist-stnr`: NIST STNR
--   `wada-snr`: WADA SNR
--   `snr-vad`: SNR VAD
+- `scene`: 動画ID/xxxxx.avi
+- `nist-stnr`: NIST STNR
+- `wada-snr`: WADA SNR
+- `snr-vad`: SNR VAD
 
 ### 3 一般線形モデルでBGMがないか推定する
 
@@ -114,22 +110,21 @@ endfunction
 おさらいですが、`syncnet`で算出したスコアは以下の項目をもちます。
 このファイルを`score-syncnet.csv`とします。
 
--   `scene`: 動画ID/xxxxx.avi
--   `score`: SyncNetのスコア
--   `length`: 動画の長さ(s)
+- `scene`: 動画ID/xxxxx.avi
+- `score`: SyncNetのスコア
+- `length`: 動画の長さ(s)
 
 また、推定のために、次のデータを作成しておきます。
 このファイルを`clean.csv`とします。
 
--   `scene`: 動画ID/xxxxx.avi
--   `t/f`: 音声に効果音・BGMが含まれていない: `TRUE`, 含まれている:
-    `FALSE`
+- `scene`: 動画ID/xxxxx.avi
+- `t/f`: 音声に効果音・BGMが含まれていない: `TRUE`, 含まれている: `FALSE`
 
 #### 一般線形モデルの作成・評価
 
 まず、全ての項目を集めた`score.csv`と、モデル作成に必要な項目を集めた`score-tf.csv`を作成します。
 
-``` r
+```{r warning=FALSE, message=FALSE}
 library(readr)
 library(dplyr)
 score_syncnet <- read_csv('score-syncnet.csv')
@@ -157,7 +152,7 @@ tf %>% inner_join(score) %>% write_csv('score-tf.csv')
 次に、`score.csv`の内容をもとに一般線形モデルを作成し、混合行列を求めます。
 その後、全サンプルを用いてモデルを作成し、推定結果を`prediction.csv`に書き出します。
 
-``` r
+```{r warning=FALSE, message=FALSE}
 library(readr)
 library(dplyr)
 set.seed(456)
@@ -179,14 +174,7 @@ table(
   tf_test$`t/f`,
   predict(model, tf_test, 'response') >= 0.5,
   dnn = c('test', 'prediction'))
-```
 
-    ##        prediction
-    ## test    FALSE TRUE
-    ##   FALSE   799   11
-    ##   TRUE    102   41
-
-``` r
 model_all <- glm(
   data = tf_all,
   `t/f` ~ score + length + `nist-stnr` + `wada-snr` + `snr-vad` +
