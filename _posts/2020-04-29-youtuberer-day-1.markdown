@@ -2,7 +2,6 @@
 layout: post
 title:  "あつまれ YouTuberのデータ その1"
 date:   2020-04-29 20:00:00 +0900
-published: false
 ---
 
 ### 長期目標

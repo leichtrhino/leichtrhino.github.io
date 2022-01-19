@@ -2,7 +2,6 @@
 layout: post
 title:  "あつまれ YouTuberのデータ その4"
 date:   2020-05-05 014:00:00 +0900
-published: false
 ---
 
 [前回]({% post_url 2020-05-02-youtuberer-day-3 %})
